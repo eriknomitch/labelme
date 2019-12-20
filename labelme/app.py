@@ -208,6 +208,9 @@ class MainWindow(QtWidgets.QMainWindow):
         saveAs = action('&Save As', self.saveFileAs, shortcuts['save_as'],
                         'save-as', 'Save labels to a different file',
                         enabled=False)
+        saveToDb = action('&Save to DB', self.saveFileToDb, shortcuts['save_to_db'],
+                        'save-as', 'Insert labels in database',
+                        enabled=True)
 
         deleteFile = action(
             '&Delete File',
@@ -414,7 +417,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.actions = utils.struct(
             saveAuto=saveAuto,
             changeOutputDir=changeOutputDir,
-            save=save, saveAs=saveAs, open=open_, close=close,
+            save=save, saveAs=saveAs, saveToDb=saveToDb, open=open_, close=close,
             deleteFile=deleteFile,
             lineColor=color1, fillColor=color2,
             toggleKeepPrevMode=toggle_keep_prev_mode,
@@ -432,7 +435,7 @@ class MainWindow(QtWidgets.QMainWindow):
             fitWindow=fitWindow, fitWidth=fitWidth,
             zoomActions=zoomActions,
             openNextImg=openNextImg, openPrevImg=openPrevImg,
-            fileMenuActions=(open_, opendir, save, saveAs, close, quit),
+            fileMenuActions=(open_, opendir, save, saveAs, saveToDb, close, quit),
             tool=(),
             # XXX: need to add some actions here to activate the shortcut
             editMenu=(
@@ -504,6 +507,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.menus.recentFiles,
                 save,
                 saveAs,
+                saveToDb,
                 saveAuto,
                 changeOutputDir,
                 close,
@@ -1424,6 +1428,12 @@ class MainWindow(QtWidgets.QMainWindow):
                 self._saveFile(self.saveFileDialog())
 
     def saveFileAs(self, _value=False):
+        assert not self.image.isNull(), "cannot save empty image"
+        if self.hasLabels():
+            self._saveFile(self.saveFileDialog())
+
+    def saveFileToDb(self, _value=False):
+        # TEMPORARY:
         assert not self.image.isNull(), "cannot save empty image"
         if self.hasLabels():
             self._saveFile(self.saveFileDialog())
