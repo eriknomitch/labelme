@@ -66,7 +66,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self._config = config
 
         super(MainWindow, self).__init__()
-        self.setWindowTitle(__appname__)
+        self.setWindowTitle(f"{__appname__} [Global DIRT Mod]")
 
         # Whether we need to save or not.
         self.dirty = False
