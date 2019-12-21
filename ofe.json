@@ -1,0 +1,16 @@
+{
+  "default": {
+    "extensions": [".py"],
+    "first_file": "labelme/app.py"
+  },
+  "docs": {
+    "extensions": [".md"],
+    "first_file": "README.md"
+  },
+  "diff": {
+    "command": "git diff --name-only"
+  },
+  "git": {
+    "files": [".git/config", ".gitignore"]
+  }
+}
