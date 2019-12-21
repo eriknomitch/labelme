@@ -3,6 +3,7 @@ import os
 import os.path as osp
 import re
 import webbrowser
+import sqlite3
 
 from qtpy import QtCore
 from qtpy.QtCore import Qt
@@ -1436,7 +1437,8 @@ class MainWindow(QtWidgets.QMainWindow):
         # TEMPORARY:
         assert not self.image.isNull(), "cannot save empty image"
         if self.hasLabels():
-            self._saveFile(self.saveFileDialog())
+            conn = sqlite3.connect(self._config['db_name'])
+            print(conn)
 
     def saveFileDialog(self):
         caption = '%s - Choose File' % __appname__
