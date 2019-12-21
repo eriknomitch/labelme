@@ -2,30 +2,6 @@ import sqlite3
 import os
 import sys
 
-#  -----------------------------------------------
-#  -----------------------------------------------
-#  -----------------------------------------------
-if os.path.exists("labels.db"):
-    print("fatal: labels.db already exists. Remove it first.")
-    sys.exit(1)
-
-conn = sqlite3.connect("labels.db")
-
-c = conn.cursor()
-
-# ------------------------------------------------
-# ------------------------------------------------
-# ------------------------------------------------
-# c.execute("""
-# CREATE TABLE labels (
-#     id INTEGER PRIMARY KEY,
-#     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-#     updated_at TIMESTAMP,
-#     image_path TEXT,
-#     labels BLOB
-# )
-# """)
-
 # ------------------------------------------------
 # ------------------------------------------------
 # ------------------------------------------------
@@ -63,5 +39,23 @@ def insert_example_data(n_batches):
 # ================================================
 # MAIN ===========================================
 # ================================================
+if os.path.exists("labels.db"):
+    print("fatal: labels.db already exists. Remove it first.")
+    sys.exit(1)
 
+conn = sqlite3.connect("labels.db")
+
+c = conn.cursor()
+
+c.execute("""
+CREATE TABLE labels (
+    id INTEGER PRIMARY KEY,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP,
+    image_path TEXT,
+    labels BLOB
+)
+""")
+
+insert_example_data(100)
 
