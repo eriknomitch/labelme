@@ -1438,7 +1438,10 @@ class MainWindow(QtWidgets.QMainWindow):
         assert not self.image.isNull(), "cannot save empty image"
         if self.hasLabels():
             conn = sqlite3.connect(self._config['db_name'])
-            print(conn)
+            c = conn.cursor()
+
+            for row in c.execute('SELECT * FROM labels'):
+                print(row)
 
     def saveFileDialog(self):
         caption = '%s - Choose File' % __appname__
