@@ -1434,7 +1434,6 @@ class MainWindow(QtWidgets.QMainWindow):
             self._saveFile(self.saveFileDialog())
 
     def saveFileToDb(self, _value=False):
-        # TEMPORARY:
         assert not self.image.isNull(), "cannot save empty image"
         if self.hasLabels():
             conn = sqlite3.connect(self._config['db_name'])
