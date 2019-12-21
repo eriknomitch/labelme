@@ -1,8 +1,14 @@
 import sqlite3
+import os
+import sys
 
 #  -----------------------------------------------
 #  -----------------------------------------------
 #  -----------------------------------------------
+if os.path.exists("labels.db"):
+    print("fatal: labels.db already exists. Remove it first.")
+    sys.exit(1)
+
 conn = sqlite3.connect("labels.db")
 
 c = conn.cursor()
@@ -37,17 +43,25 @@ example_names = [
   "2011_000025"
 ]
 
-for batch in range(100):
-    for example_name in example_names:
-        query = """
-        INSERT INTO labels (image_path, labels) values (?, ?)
-        """
+def insert_example_data(n_batches):
+    for batch in range(n_batches):
+        for example_name in example_names:
+            query = """
+            INSERT INTO labels (image_path, labels) values (?, ?)
+            """
 
-        image_path = f"{examples_path}/{example_name}.jpg"
-        label_path = f"{examples_path}/{example_name}.json"
+            image_path = f"{examples_path}/{example_name}.jpg"
+            label_path = f"{examples_path}/{example_name}.json"
 
-        data_tuple = (image_path, convert_to_blob(label_path))
+            data_tuple = (image_path, convert_to_blob(label_path))
 
-        c.execute(query, data_tuple)
+            c.execute(query, data_tuple)
 
-        conn.commit()
+            conn.commit()
+    pass
+
+# ================================================
+# MAIN ===========================================
+# ================================================
+
+
