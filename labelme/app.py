@@ -1412,21 +1412,23 @@ class MainWindow(QtWidgets.QMainWindow):
             self.loadFile(filename)
 
     def openFileFromDb(self, _value=False):
-        if not self.mayContinue():
-            return
-        path = osp.dirname(str(self.filename)) if self.filename else '.'
-        formats = ['*.{}'.format(fmt.data().decode())
-                   for fmt in QtGui.QImageReader.supportedImageFormats()]
-        filters = "Image & Label files (%s)" % ' '.join(
-            formats + ['*%s' % LabelFile.suffix])
-        filename = QtWidgets.QFileDialog.getOpenFileName(
-            self, '%s - Choose Image or Label file' % __appname__,
-            path, filters)
-        if QT5:
-            filename, _ = filename
-        filename = str(filename)
-        if filename:
-            self.loadFile(filename)
+
+        test_id = 1
+
+        conn, c = utils.open_db(self._config["db_name"])
+
+        c.execute("""
+        SELECT id, created_at, updated_at, image_path, labels
+            FROM labels
+            WHERE id = ? LIMIT 1"""
+            , (test_id,))
+
+        row = c.fetchone()
+
+        image_path = row[3]
+        labels = row[4]
+
+        print(image_path)
 
     def changeOutputDirDialog(self, _value=False):
         default_output_dir = self.output_dir
