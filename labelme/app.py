@@ -1014,7 +1014,7 @@ class MainWindow(QtWidgets.QMainWindow):
             item.setCheckState(Qt.Checked if flag else Qt.Unchecked)
             self.flag_widget.addItem(item)
 
-    def saveLabels(self, filename):
+    def saveLabels(self, filename, to_db=False):
         lf = LabelFile()
 
         def format_shape(s):
@@ -1040,8 +1040,11 @@ class MainWindow(QtWidgets.QMainWindow):
             imagePath = osp.relpath(
                 self.imagePath, osp.dirname(filename))
             imageData = self.imageData if self._config['store_data'] else None
-            if osp.dirname(filename) and not osp.exists(osp.dirname(filename)):
-                os.makedirs(osp.dirname(filename))
+
+            if not to_db:
+                if osp.dirname(filename) and not osp.exists(osp.dirname(filename)):
+                    os.makedirs(osp.dirname(filename))
+
             lf.save(
                 filename=filename,
                 shapes=shapes,
@@ -1053,17 +1056,21 @@ class MainWindow(QtWidgets.QMainWindow):
                 fillColor=self.fillColor.getRgb(),
                 otherData=self.otherData,
                 flags=flags,
+                to_db=to_db
             )
-            self.labelFile = lf
-            items = self.fileListWidget.findItems(
-                self.imagePath, Qt.MatchExactly
-            )
-            if len(items) > 0:
-                if len(items) != 1:
-                    raise RuntimeError('There are duplicate files.')
-                items[0].setCheckState(Qt.Checked)
-            # disable allows next and previous image to proceed
-            # self.filename = filename
+
+            if not to_db:
+                self.labelFile = lf
+                items = self.fileListWidget.findItems(
+                    self.imagePath, Qt.MatchExactly
+                )
+                if len(items) > 0:
+                    if len(items) != 1:
+                        raise RuntimeError('There are duplicate files.')
+                    items[0].setCheckState(Qt.Checked)
+                # disable allows next and previous image to proceed
+                # self.filename = filename
+
             return True
         except LabelFileError as e:
             self.errorMessage('Error saving label data', '<b>%s</b>' % e)

@@ -140,6 +140,7 @@ class LabelFile(object):
         fillColor=None,
         otherData=None,
         flags=None,
+        to_db=False,
     ):
         if imageData is not None:
             imageData = base64.b64encode(imageData).decode('utf-8')
@@ -164,9 +165,13 @@ class LabelFile(object):
         for key, value in otherData.items():
             data[key] = value
         try:
-            with open(filename, 'wb' if PY2 else 'w') as f:
-                json.dump(data, f, ensure_ascii=False, indent=2)
-            self.filename = filename
+            if to_db:
+                print("SAVE TO DB TEMPORARY")
+            else:
+                with open(filename, 'wb' if PY2 else 'w') as f:
+                    json.dump(data, f, ensure_ascii=False, indent=2)
+                self.filename = filename
+
         except Exception as e:
             raise LabelFileError(e)
 
