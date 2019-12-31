@@ -182,7 +182,7 @@ class LabelFile(object):
 
                 for row in c.execute('SELECT * FROM labels ORDER BY id DESC LIMIT 1'):
                     print(row)
-                    
+
                 print("SAVE TO DB TEMPORARY")
             else:
                 with open(filename, 'wb' if PY2 else 'w') as f:
