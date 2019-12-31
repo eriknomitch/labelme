@@ -168,8 +168,11 @@ class LabelFile(object):
             data[key] = value
         try:
             if to_db:
-                conn = sqlite3.connect(self.dbName)
-                c = conn.cursor()
+
+                # Delete image_data since we are not saving the file in the db
+                del data['image_data']
+
+                conn, c = utils.open_db(self.dbName)
 
                 for row in c.execute('SELECT id FROM labels'):
                     print(row)
