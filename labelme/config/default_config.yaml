@@ -48,6 +48,7 @@ epsilon: 10.0
 shortcuts:
   close: Ctrl+W
   open: Ctrl+O
+  open_from_db: Ctrl+Shift+O
   open_dir: Ctrl+U
   quit: Ctrl+Q
   save: Ctrl+S

@@ -186,6 +186,8 @@ class MainWindow(QtWidgets.QMainWindow):
                       'Quit application')
         open_ = action('&Open', self.openFile, shortcuts['open'], 'open',
                        'Open image or label file')
+        open_from_db = action('&Open from DB', self.openFileFromDb, shortcuts['open_from_db'], 'open',
+                       'Open label and corresponding image from DB')
         opendir = action('&Open Dir', self.openDirDialog,
                          shortcuts['open_dir'], 'open', u'Open Dir')
         openNextImg = action(
@@ -429,7 +431,7 @@ class MainWindow(QtWidgets.QMainWindow):
             saveAuto=saveAuto,
             saveDbAuto=saveDbAuto,
             changeOutputDir=changeOutputDir,
-            save=save, saveAs=saveAs, saveToDb=saveToDb, open=open_, close=close,
+            save=save, saveAs=saveAs, saveToDb=saveToDb, open=open_, open_from_db=open_from_db, close=close,
             deleteFile=deleteFile,
             lineColor=color1, fillColor=color2,
             toggleKeepPrevMode=toggle_keep_prev_mode,
@@ -447,7 +449,7 @@ class MainWindow(QtWidgets.QMainWindow):
             fitWindow=fitWindow, fitWidth=fitWidth,
             zoomActions=zoomActions,
             openNextImg=openNextImg, openPrevImg=openPrevImg,
-            fileMenuActions=(open_, opendir, save, saveAs, saveToDb, close, quit),
+            fileMenuActions=(open_, open_from_db, opendir, save, saveAs, saveToDb, close, quit),
             tool=(),
             # XXX: need to add some actions here to activate the shortcut
             editMenu=(
@@ -513,6 +515,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.menus.file,
             (
                 open_,
+                open_from_db,
                 openNextImg,
                 openPrevImg,
                 opendir,
@@ -569,6 +572,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # Menu buttons on Left
         self.actions.tool = (
             open_,
+            open_from_db,
             opendir,
             openNextImg,
             openPrevImg,
@@ -1391,6 +1395,23 @@ class MainWindow(QtWidgets.QMainWindow):
         self._config['keep_prev'] = keep_prev
 
     def openFile(self, _value=False):
+        if not self.mayContinue():
+            return
+        path = osp.dirname(str(self.filename)) if self.filename else '.'
+        formats = ['*.{}'.format(fmt.data().decode())
+                   for fmt in QtGui.QImageReader.supportedImageFormats()]
+        filters = "Image & Label files (%s)" % ' '.join(
+            formats + ['*%s' % LabelFile.suffix])
+        filename = QtWidgets.QFileDialog.getOpenFileName(
+            self, '%s - Choose Image or Label file' % __appname__,
+            path, filters)
+        if QT5:
+            filename, _ = filename
+        filename = str(filename)
+        if filename:
+            self.loadFile(filename)
+
+    def openFileFromDb(self, _value=False):
         if not self.mayContinue():
             return
         path = osp.dirname(str(self.filename)) if self.filename else '.'
