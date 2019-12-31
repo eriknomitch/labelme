@@ -169,8 +169,8 @@ class LabelFile(object):
         try:
             if to_db:
 
-                # Delete image_data since we are not saving the file in the db
-                del data['image_data']
+                # Delete imageData since we are not saving the file in the db
+                del data['imageData']
 
                 conn, c = utils.open_db(self.dbName)
 
