@@ -10,6 +10,10 @@ def open_db(path=None):
         path = config["db_name"]
 
     conn = sqlite3.connect(path)
+
+    # SEE: https://docs.python.org/3/library/sqlite3.html#sqlite3.Connection.row_factory
+    conn.row_factory = sqlite3.Row
+
     c = conn.cursor()
 
     return conn, c
