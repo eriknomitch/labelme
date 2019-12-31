@@ -1017,6 +1017,9 @@ class MainWindow(QtWidgets.QMainWindow):
     def saveLabels(self, filename, to_db=False):
         lf = LabelFile()
 
+        if to_db:
+            lf.dbName = self._config["db_name"]
+
         def format_shape(s):
             return dict(
                 label=s.label.encode('utf-8') if PY2 else s.label,

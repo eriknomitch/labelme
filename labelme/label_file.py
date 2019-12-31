@@ -25,6 +25,7 @@ class LabelFile(object):
         self.shapes = ()
         self.imagePath = None
         self.imageData = None
+        self.dbName = None
         if filename is not None:
             self.load(filename)
         self.filename = filename
@@ -167,13 +168,10 @@ class LabelFile(object):
             data[key] = value
         try:
             if to_db:
-
-                # TEMPORARY:
-                # TODO: Get filename from config (probably pass in)
-                conn = sqlite3.connect("labels.db")
+                conn = sqlite3.connect(self.dbName)
                 c = conn.cursor()
 
-                for row in c.execute('SELECT * FROM labels'):
+                for row in c.execute('SELECT id FROM labels'):
                     print(row)
                 print("SAVE TO DB TEMPORARY")
             else:
