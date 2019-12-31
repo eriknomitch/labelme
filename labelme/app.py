@@ -239,6 +239,16 @@ class MainWindow(QtWidgets.QMainWindow):
         )
         saveAuto.setChecked(self._config['auto_save'])
 
+        saveDbAuto = action(
+            text='Save to DB &Automatically',
+            slot=lambda x: self.actions.saveDbAuto.setChecked(x),
+            icon='save',
+            tip='Save to DB automatically',
+            checkable=True,
+            enabled=True,
+        )
+        saveDbAuto.setChecked(self._config['auto_save_db'])
+
         close = action('&Close', self.closeFile, shortcuts['close'], 'close',
                        'Close current file')
         color1 = action('Polygon &Line Color', self.chooseColor1,
@@ -417,6 +427,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # Store actions for further handling.
         self.actions = utils.struct(
             saveAuto=saveAuto,
+            saveDbAuto=saveDbAuto,
             changeOutputDir=changeOutputDir,
             save=save, saveAs=saveAs, saveToDb=saveToDb, open=open_, close=close,
             deleteFile=deleteFile,
@@ -510,6 +521,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 saveAs,
                 saveToDb,
                 saveAuto,
+                saveDbAuto,
                 changeOutputDir,
                 close,
                 deleteFile,
