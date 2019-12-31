@@ -1411,8 +1411,10 @@ class MainWindow(QtWidgets.QMainWindow):
         if filename:
             self.loadFile(filename)
 
+    # TODO: Move most of this logic elsewhere
     def openFileFromDb(self, _value=False):
 
+        # TEMPORARY:
         test_id = 1
 
         conn, c = utils.open_db(self._config["db_name"])
