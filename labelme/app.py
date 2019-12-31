@@ -1221,6 +1221,8 @@ class MainWindow(QtWidgets.QMainWindow):
             return False
         # assumes same name, but json extension
         self.status("Loading %s..." % osp.basename(str(filename)))
+
+        # TODO: IMPORTANT: Switch here for DB loading...
         label_file = osp.splitext(filename)[0] + '.json'
         if self.output_dir:
             label_file_without_path = osp.basename(label_file)
