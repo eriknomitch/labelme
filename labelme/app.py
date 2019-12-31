@@ -1021,9 +1021,6 @@ class MainWindow(QtWidgets.QMainWindow):
     def saveLabels(self, filename, to_db=False):
         lf = LabelFile()
 
-        if to_db:
-            lf.dbName = self._config["db_name"]
-
         def format_shape(s):
             return dict(
                 label=s.label.encode('utf-8') if PY2 else s.label,
@@ -1417,7 +1414,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # TEMPORARY:
         test_id = 1
 
-        conn, c = utils.open_db(self._config["db_name"])
+        conn, c = utils.open_db()
 
         c.execute("""
         SELECT id, created_at, updated_at, image_path, labels
