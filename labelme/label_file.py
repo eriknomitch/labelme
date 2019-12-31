@@ -174,8 +174,15 @@ class LabelFile(object):
 
                 conn, c = utils.open_db(self.dbName)
 
-                for row in c.execute('SELECT id FROM labels'):
+                query = """
+                INSERT INTO labels (image_path, labels) values (?, ?)
+                """
+
+                c.execute(query, (filename, json.dumps(data).encode('utf-8')))
+
+                for row in c.execute('SELECT * FROM labels ORDER BY id DESC LIMIT 1'):
                     print(row)
+                    
                 print("SAVE TO DB TEMPORARY")
             else:
                 with open(filename, 'wb' if PY2 else 'w') as f:
