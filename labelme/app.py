@@ -1410,6 +1410,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
     # TODO: Move most of this logic elsewhere
     def openFileFromDb(self, _value=False):
+        if not self.mayContinue():
+            return
 
         # TEMPORARY:
         test_id = 1
@@ -1424,10 +1426,11 @@ class MainWindow(QtWidgets.QMainWindow):
 
         row = c.fetchone()
 
-        image_path = row[3]
-        labels = row[4]
+        print(row)
 
-        print(image_path)
+        print(row['labels'])
+
+        self.loadFile(row['image_path'])
 
     def changeOutputDirDialog(self, _value=False):
         default_output_dir = self.output_dir
