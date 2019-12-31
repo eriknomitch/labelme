@@ -696,6 +696,8 @@ class MainWindow(QtWidgets.QMainWindow):
         utils.addActions(self.menus.edit, actions + self.actions.editMenu)
 
     def setDirty(self):
+        # NOTE: This is where the auto save actually takes place
+        # TODO: Insert the saveDbAuto here
         if self._config['auto_save'] or self.actions.saveAuto.isChecked():
             label_file = osp.splitext(self.imagePath)[0] + '.json'
             if self.output_dir:
