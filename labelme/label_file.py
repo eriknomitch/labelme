@@ -53,7 +53,7 @@ class LabelFile(object):
             f.seek(0)
             return f.read()
 
-    def load(self, filename):
+    def load(self, filename, from_db=False):
         keys = [
             'imageData',
             'imagePath',
@@ -65,6 +65,7 @@ class LabelFile(object):
             'imageWidth',
         ]
         try:
+            # NOTE: Here is where we need to switch if from_db
             with open(filename, 'rb' if PY2 else 'r') as f:
                 data = json.load(f)
             if data['imageData'] is not None:
