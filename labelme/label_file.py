@@ -178,7 +178,7 @@ class LabelFile(object):
                 INSERT INTO labels (image_path, labels) values (?, ?)
                 """
 
-                c.execute(query, (filename, json.dumps(data).encode('utf-8')))
+                c.execute(query, (filename, json.dumps(data, ensure_ascii=False, indent=2).encode('utf-8')))
 
                 for row in c.execute('SELECT * FROM labels ORDER BY id DESC LIMIT 1'):
                     print(row)
