@@ -169,7 +169,8 @@ class LabelFile(object):
             if to_db:
 
                 # TEMPORARY:
-                conn = sqlite3.connect(self._config['db_name'])
+                # TODO: Get filename from config (probably pass in)
+                conn = sqlite3.connect("labels.db")
                 c = conn.cursor()
 
                 for row in c.execute('SELECT * FROM labels'):
