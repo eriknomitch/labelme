@@ -1227,6 +1227,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if QtCore.QFile.exists(label_file) and \
                 LabelFile.is_label_file(label_file):
             try:
+                # NOTE: Here is where the actual file load happens
                 self.labelFile = LabelFile(label_file)
             except LabelFileError as e:
                 self.errorMessage(
