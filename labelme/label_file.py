@@ -2,6 +2,7 @@ import base64
 import io
 import json
 import os.path as osp
+import sqlite3
 
 import PIL.Image
 
@@ -166,6 +167,13 @@ class LabelFile(object):
             data[key] = value
         try:
             if to_db:
+
+                # TEMPORARY:
+                conn = sqlite3.connect(self._config['db_name'])
+                c = conn.cursor()
+
+                for row in c.execute('SELECT * FROM labels'):
+                    print(row)
                 print("SAVE TO DB TEMPORARY")
             else:
                 with open(filename, 'wb' if PY2 else 'w') as f:

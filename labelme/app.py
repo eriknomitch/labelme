@@ -1457,11 +1457,8 @@ class MainWindow(QtWidgets.QMainWindow):
     def saveFileToDb(self, _value=False):
         assert not self.image.isNull(), "cannot save empty image"
         if self.hasLabels():
-            conn = sqlite3.connect(self._config['db_name'])
-            c = conn.cursor()
-
-            for row in c.execute('SELECT * FROM labels'):
-                print(row)
+            # FIX: Not sure about the filename argument here... might want the row ID?
+            self._saveFile(self.labelFile.filename, True)
 
     def saveFileDialog(self):
         caption = '%s - Choose File' % __appname__
@@ -1495,9 +1492,10 @@ class MainWindow(QtWidgets.QMainWindow):
         filename = str(filename)
         return filename
 
-    def _saveFile(self, filename):
-        if filename and self.saveLabels(filename):
-            self.addRecentFile(filename)
+    def _saveFile(self, filename, to_db=False):
+        if filename and self.saveLabels(filename, to_db):
+            if not to_db:
+                self.addRecentFile(filename)
             self.setClean()
 
     def closeFile(self, _value=False):
