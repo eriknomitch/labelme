@@ -206,16 +206,13 @@ class LabelFile(object):
                 del data['imageData']
 
                 rows = query("""
-                INSERT INTO labels
-                    (image_path, labels)
-                    values
-                    (?, ?)
-                """, (filename, dict_to_json_blob(data)))
+                UPDATE labels SET
+                    labels = ?
+                    WHERE
+                    id = ?
+                """, (dict_to_json_blob(data), self.db_id))
 
-                for row in rows:
-                    print(row['id'])
-
-                print("SAVE TO DB TEMPORARY")
+                print(f"Saved {self.db_id} to DB")
             else:
                 with open(filename, 'wb' if PY2 else 'w') as f:
                     json.dump(data, f, ensure_ascii=False, indent=2)

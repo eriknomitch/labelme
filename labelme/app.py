@@ -1019,7 +1019,12 @@ class MainWindow(QtWidgets.QMainWindow):
             self.flag_widget.addItem(item)
 
     def saveLabels(self, filename, to_db=False):
+        # NOTE: Create a new LabelFile first then replace it later
         lf = LabelFile()
+
+        # FIX: NOTE: Hack to get the ID into the new LabelFile for saving later
+        if to_db:
+            lf.db_id = self.labelFile.db_id
 
         def format_shape(s):
             return dict(
@@ -1045,25 +1050,25 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.imagePath, osp.dirname(filename))
             imageData = self.imageData if self._config['store_data'] else None
 
+            # FIX: DRY:
             if not to_db:
                 if osp.dirname(filename) and not osp.exists(osp.dirname(filename)):
                     os.makedirs(osp.dirname(filename))
 
-            lf.save(
-                filename=filename,
-                shapes=shapes,
-                imagePath=imagePath,
-                imageData=imageData,
-                imageHeight=self.image.height(),
-                imageWidth=self.image.width(),
-                lineColor=self.lineColor.getRgb(),
-                fillColor=self.fillColor.getRgb(),
-                otherData=self.otherData,
-                flags=flags,
-                to_db=to_db
-            )
+                lf.save(
+                    filename=filename,
+                    shapes=shapes,
+                    imagePath=imagePath,
+                    imageData=imageData,
+                    imageHeight=self.image.height(),
+                    imageWidth=self.image.width(),
+                    lineColor=self.lineColor.getRgb(),
+                    fillColor=self.fillColor.getRgb(),
+                    otherData=self.otherData,
+                    flags=flags,
+                    to_db=to_db
+                )
 
-            if not to_db:
                 self.labelFile = lf
                 items = self.fileListWidget.findItems(
                     self.imagePath, Qt.MatchExactly
@@ -1074,9 +1079,29 @@ class MainWindow(QtWidgets.QMainWindow):
                     items[0].setCheckState(Qt.Checked)
                 # disable allows next and previous image to proceed
                 # self.filename = filename
+            else:
+                # FIX: HACK:
+                imagePath = filename
+
+                lf.save(
+                    filename=self.filename, # FIX: HACK:
+                    shapes=shapes,
+                    imagePath=imagePath,
+                    imageData=imageData,
+                    imageHeight=self.image.height(),
+                    imageWidth=self.image.width(),
+                    lineColor=self.lineColor.getRgb(),
+                    fillColor=self.fillColor.getRgb(),
+                    otherData=self.otherData,
+                    flags=flags,
+                    to_db=to_db
+                )
+
+                self.labelFile = lf
 
             return True
         except LabelFileError as e:
+            raise(e)
             self.errorMessage('Error saving label data', '<b>%s</b>' % e)
             return False
 
@@ -1420,9 +1445,11 @@ class MainWindow(QtWidgets.QMainWindow):
 
         lf = LabelFile.load_from_db(_id)
 
-        # FIX: Set self. stuff here
-
+        # FIX: This needs to be heavily edited for DB
         self.loadFile(lf.imagePath)
+
+        # FIX: HACK:
+        self.labelFile.db_id = _id
 
     def changeOutputDirDialog(self, _value=False):
         default_output_dir = self.output_dir
