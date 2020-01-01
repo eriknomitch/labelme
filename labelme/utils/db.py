@@ -21,7 +21,7 @@ def open_db():
 
 # FROM: https://stackoverflow.com/a/46519449
 def query(self, sql):
-    with closing(sqlite3.connect(get_db_path())) as con, con,  \
+    with closing(connect_db()) as con, con,  \
             closing(con.cursor()) as cur:
         cur.execute(sql)
         return cur.fetchall()
