@@ -1226,7 +1226,7 @@ class MainWindow(QtWidgets.QMainWindow):
         for item, shape in self.labelList.itemsToShapes:
             item.setCheckState(Qt.Checked if value else Qt.Unchecked)
 
-    # TODO: DRY loadFile
+    # TODO: DRY with loadFile
     def loadFileFromDb(self, _id):
         self.resetState()
         self.canvas.setEnabled(False)
@@ -1236,9 +1236,22 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.labelFile = lf
         self.imagePath = lf.imagePath
+
+        # FIX: Happening twice? once in label_file load()?
         self.imageData = LabelFile.load_image_file(lf.imagePath)
+
         self.image = QtGui.QImage.fromData(self.imageData)
         self.filename = lf.filename
+
+        if self.labelFile.lineColor is not None:
+            self.lineColor = QtGui.QColor(*self.labelFile.lineColor)
+        if self.labelFile.fillColor is not None:
+            self.fillColor = QtGui.QColor(*self.labelFile.fillColor)
+        self.otherData = self.labelFile.otherData
+
+        self.loadLabels(self.labelFile.shapes)
+        if self.labelFile.flags is not None:
+            self.loadFlags(self.labelFile.flags)
 
         self.canvas.loadPixmap(QtGui.QPixmap.fromImage(self.image))
 
@@ -1249,8 +1262,6 @@ class MainWindow(QtWidgets.QMainWindow):
         # self.addRecentFile(self.filename)
         self.toggleActions(True)
         self.status("Loaded %s" % osp.basename(str(self.filename)))
-
-        set_trace()
 
         return True
 

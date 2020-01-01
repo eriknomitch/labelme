@@ -14,6 +14,8 @@ from labelme import utils
 
 from labelme.utils.db import query, dict_to_json_blob
 
+from ipdb import set_trace
+
 class LabelFileError(Exception):
     pass
 
@@ -58,6 +60,9 @@ class LabelFile(object):
         lf.imagePath = lf.db_row['image_path']
         lf.filename = osp.splitext(lf.imagePath)[0] + '.json'
 
+        # Load shapes, etc. but from DB
+        lf.load(lf.filename, True)
+
         return lf
 
     @staticmethod
@@ -95,17 +100,26 @@ class LabelFile(object):
             'imageWidth',
         ]
         try:
-            # NOTE: Here is where we need to switch if from_db
-            with open(filename, 'rb' if PY2 else 'r') as f:
-                data = json.load(f)
-            if data['imageData'] is not None:
+            if from_db:
+                data = json.loads(self.db_row['labels'])
+            else:
+                with open(filename, 'rb' if PY2 else 'r') as f:
+                    data = json.load(f)
+
+            if 'imageData' in data and data['imageData'] is not None:
                 imageData = base64.b64decode(data['imageData'])
                 if PY2 and QT4:
                     imageData = utils.img_data_to_png_data(imageData)
             else:
-                # relative path from label file to relative path from cwd
-                imagePath = osp.join(osp.dirname(filename), data['imagePath'])
+
+                # FIX: Relative paths
+                if from_db:
+                    imagePath = self.db_row['image_path']
+                else:
+                    # relative path from label file to relative path from cwd
+                    imagePath = osp.join(osp.dirname(filename), data['imagePath'])
                 imageData = self.load_image_file(imagePath)
+
             flags = data.get('flags') or {}
             imagePath = data['imagePath']
             self._check_image_height_and_width(
@@ -127,6 +141,8 @@ class LabelFile(object):
                 for s in data['shapes']
             )
         except Exception as e:
+            print(e)
+            set_trace()
             raise LabelFileError(e)
 
         otherData = {}
@@ -217,6 +233,8 @@ class LabelFile(object):
                 self.filename = filename
 
         except Exception as e:
+            print(e)
+            set_trace()
             raise LabelFileError(e)
 
     @staticmethod
