@@ -1226,6 +1226,34 @@ class MainWindow(QtWidgets.QMainWindow):
         for item, shape in self.labelList.itemsToShapes:
             item.setCheckState(Qt.Checked if value else Qt.Unchecked)
 
+    # TODO: DRY loadFile
+    def loadFileFromDb(self, _id):
+        self.resetState()
+        self.canvas.setEnabled(False)
+
+        # Load from DB as if we were loading a .json
+        lf = LabelFile.load_from_db(_id)
+
+        self.labelFile = lf
+        self.imagePath = lf.imagePath
+        self.imageData = LabelFile.load_image_file(lf.imagePath)
+        self.image = QtGui.QImage.fromData(self.imageData)
+        self.filename = lf.filename
+
+        self.canvas.loadPixmap(QtGui.QPixmap.fromImage(self.image))
+
+        self.setClean()
+        self.canvas.setEnabled(True)
+        self.adjustScale(initial=True)
+        self.paintCanvas()
+        # self.addRecentFile(self.filename)
+        self.toggleActions(True)
+        self.status("Loaded %s" % osp.basename(str(self.filename)))
+
+        set_trace()
+
+        return True
+
     def loadFile(self, filename=None):
         """Load the specified file, or the last opened file if None."""
         # changing fileListWidget loads file
@@ -1436,8 +1464,6 @@ class MainWindow(QtWidgets.QMainWindow):
         if filename:
             self.loadFile(filename)
 
-        set_trace()
-
     # TODO: Move most of this logic elsewhere
     def openFileFromDb(self, _value=False):
         if not self.mayContinue():
@@ -1446,13 +1472,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # TEMPORARY:
         _id = 1
 
-        lf = LabelFile.load_from_db(_id)
-
-        # FIX: This needs to be heavily edited for DB
-        self.loadFile(lf.imagePath)
-
-        # FIX: HACK:
-        self.labelFile.db_id = _id
+        self.loadFileFromDb(_id)
 
     def changeOutputDirDialog(self, _value=False):
         default_output_dir = self.output_dir

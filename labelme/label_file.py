@@ -36,13 +36,9 @@ class LabelFile(object):
     @staticmethod
     def load_from_db(_id):
 
-        lf = LabelFile()
-
-        lf.db_id = _id
-
         # Fetch from DB
         # ----------------------------------------
-        rows = query("""
+        row = query("""
         SELECT
             id,
             created_at,
@@ -51,14 +47,16 @@ class LabelFile(object):
             labels
         FROM labels
             WHERE id = ? LIMIT 1"""
-            , (lf.db_id,))
+            , (_id,))[0]
 
-        row = rows[0]
+        lf = LabelFile()
 
+        lf.db_id = _id
         lf.db_row = row
 
         # TODO: FIX: We may need the absolute path? Or relative to what?
         lf.imagePath = lf.db_row['image_path']
+        lf.filename = osp.splitext(lf.imagePath)[0] + '.json'
 
         return lf
 
