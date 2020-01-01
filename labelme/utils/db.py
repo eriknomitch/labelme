@@ -3,7 +3,7 @@ from contextlib import closing
 
 from ..config import get_config
 
-def get_db_path()
+def get_db_path():
     config = get_config()
 
     if path is None:
