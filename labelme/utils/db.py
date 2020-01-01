@@ -20,7 +20,7 @@ def open_db():
     return conn, c
 
 # FROM: https://stackoverflow.com/a/46519449
-def query(self, sql):
+def query(sql):
     with closing(connect_db()) as con, con,  \
             closing(con.cursor()) as cur:
         cur.execute(sql)
