@@ -30,6 +30,7 @@ from labelme.widgets import LabelQListWidget
 from labelme.widgets import ToolBar
 from labelme.widgets import ZoomWidget
 
+from ipdb import set_trace
 
 # FIXME
 # - [medium] Set max zoom value to something big enough for FitWidth/Window
@@ -1434,6 +1435,8 @@ class MainWindow(QtWidgets.QMainWindow):
         filename = str(filename)
         if filename:
             self.loadFile(filename)
+
+        set_trace()
 
     # TODO: Move most of this logic elsewhere
     def openFileFromDb(self, _value=False):
