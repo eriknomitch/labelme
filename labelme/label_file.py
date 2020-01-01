@@ -25,7 +25,6 @@ class LabelFile(object):
         self.shapes = ()
         self.imagePath = None
         self.imageData = None
-        self.dbName = None
         if filename is not None:
             self.load(filename)
         self.filename = filename
@@ -173,7 +172,7 @@ class LabelFile(object):
                 # Delete imageData since we are not saving the file in the db
                 del data['imageData']
 
-                conn, c = utils.open_db(self.dbName)
+                conn, c = utils.open_db()
 
                 query = """
                 INSERT INTO labels (image_path, labels) values (?, ?)
