@@ -28,5 +28,5 @@ def query(sql, data=()):
         return cur.fetchall()
 
 def dict_to_json_blob(dct):
-    return json.dumps(data, ensure_ascii=False, indent=2).encode('utf-8')
+    return json.dumps(dct, ensure_ascii=False, indent=2).encode('utf-8')
 
