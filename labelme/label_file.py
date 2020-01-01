@@ -211,17 +211,15 @@ class LabelFile(object):
 
                 conn, c = utils.open_db()
 
-                c.execute("""
+                rows = query("""
                 INSERT INTO labels
                     (image_path, labels)
                     values
                     (?, ?)
                 """, (filename, dict_to_json_blob(data)))
 
-                for row in c.execute('SELECT * FROM labels ORDER BY id DESC LIMIT 1'):
-                    print(row)
-
-                conn.close()
+                for row in rows:
+                    print(row['id'])
 
                 print("SAVE TO DB TEMPORARY")
             else:

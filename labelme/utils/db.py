@@ -20,10 +20,10 @@ def open_db():
     return conn, c
 
 # FROM: https://stackoverflow.com/a/46519449
-def query(sql):
+def query(sql, data=()):
     with closing(connect_db()) as con, con,  \
             closing(con.cursor()) as cur:
-        cur.execute(sql)
+        cur.execute(sql, data)
         return cur.fetchall()
 
 def dict_to_json_blob(dct):
