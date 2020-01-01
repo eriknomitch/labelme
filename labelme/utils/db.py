@@ -1,4 +1,5 @@
 import sqlite3
+import json
 from contextlib import closing
 
 from ..config import get_config
