@@ -4,22 +4,19 @@ from contextlib import closing
 from ..config import get_config
 
 def get_db_path():
-    config = get_config()
+    return get_config()["db_name"]
 
-    if path is None:
-        path = config["db_name"]
-
-    return path
-
-def open_db(path=None):
-
+def connect_db(row_factory=sqlite3.Row):
     conn = sqlite3.connect(get_db_path())
 
     # SEE: https://docs.python.org/3/library/sqlite3.html#sqlite3.Connection.row_factory
-    conn.row_factory = sqlite3.Row
+    conn.row_factory = row_factory
 
+    return conn
+
+def open_db():
+    conn = connect_db()
     c = conn.cursor()
-
     return conn, c
 
 # FROM: https://stackoverflow.com/a/46519449
