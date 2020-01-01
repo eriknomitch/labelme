@@ -1416,23 +1416,13 @@ class MainWindow(QtWidgets.QMainWindow):
             return
 
         # TEMPORARY:
-        test_id = 1
+        _id = 1
 
-        conn, c = utils.open_db()
+        lf = LabelFile.load_from_db(_id)
 
-        c.execute("""
-        SELECT id, created_at, updated_at, image_path, labels
-            FROM labels
-            WHERE id = ? LIMIT 1"""
-            , (test_id,))
+        # FIX: Set self. stuff here
 
-        row = c.fetchone()
-
-        print(row)
-
-        print(row['labels'])
-
-        self.loadFile(row['image_path'])
+        self.loadFile(lf.imagePath)
 
     def changeOutputDirDialog(self, _value=False):
         default_output_dir = self.output_dir

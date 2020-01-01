@@ -42,9 +42,7 @@ class LabelFile(object):
 
         # Fetch from DB
         # ----------------------------------------
-        conn, c = utils.open_db()
-
-        c.execute("""
+        rows = query("""
         SELECT
             id,
             created_at,
@@ -53,16 +51,14 @@ class LabelFile(object):
             labels
         FROM labels
             WHERE id = ? LIMIT 1"""
-            , (self._id,))
+            , (lf.db_id,))
 
-        row = c.fetchone()
+        row = rows[0]
 
-        conn.close()
-
-        self.db_row = row
+        lf.db_row = row
 
         # TODO: FIX: We may need the absolute path? Or relative to what?
-        self.imagePath = self.db_row['image_path']
+        lf.imagePath = lf.db_row['image_path']
 
         return lf
 
@@ -208,8 +204,6 @@ class LabelFile(object):
 
                 # Delete imageData since we are not saving the file in the db
                 del data['imageData']
-
-                conn, c = utils.open_db()
 
                 rows = query("""
                 INSERT INTO labels

@@ -28,4 +28,4 @@ from .qt import distance
 from .qt import distancetoline
 from .qt import fmtShortcut
 
-from .db import open_db
+from .db import get_db_path, open_db, query
