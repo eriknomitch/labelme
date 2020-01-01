@@ -12,6 +12,7 @@ from labelme import PY2
 from labelme import QT4
 from labelme import utils
 
+from labelme.utils.db import query, dict_to_json_blob
 
 class LabelFileError(Exception):
     pass
@@ -22,12 +23,48 @@ class LabelFile(object):
     suffix = '.json'
 
     def __init__(self, filename=None):
+        self.db_id = None
+        self.db_row = None
+
         self.shapes = ()
         self.imagePath = None
         self.imageData = None
         if filename is not None:
             self.load(filename)
         self.filename = filename
+
+    @staticmethod
+    def load_from_db(_id):
+
+        lf = LabelFile()
+
+        lf.db_id = _id
+
+        # Fetch from DB
+        # ----------------------------------------
+        conn, c = utils.open_db()
+
+        c.execute("""
+        SELECT
+            id,
+            created_at,
+            updated_at,
+            image_path,
+            labels
+        FROM labels
+            WHERE id = ? LIMIT 1"""
+            , (self._id,))
+
+        row = c.fetchone()
+
+        conn.close()
+
+        self.db_row = row
+
+        # TODO: FIX: We may need the absolute path? Or relative to what?
+        self.imagePath = self.db_row['image_path']
+
+        return lf
 
     @staticmethod
     def load_image_file(filename):
@@ -174,14 +211,17 @@ class LabelFile(object):
 
                 conn, c = utils.open_db()
 
-                query = """
-                INSERT INTO labels (image_path, labels) values (?, ?)
-                """
-
-                c.execute(query, (filename, json.dumps(data, ensure_ascii=False, indent=2).encode('utf-8')))
+                c.execute("""
+                INSERT INTO labels
+                    (image_path, labels)
+                    values
+                    (?, ?)
+                """, (filename, dict_to_json_blob(data)))
 
                 for row in c.execute('SELECT * FROM labels ORDER BY id DESC LIMIT 1'):
                     print(row)
+
+                conn.close()
 
                 print("SAVE TO DB TEMPORARY")
             else:
