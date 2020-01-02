@@ -1251,7 +1251,7 @@ class MainWindow(QtWidgets.QMainWindow):
         #     prev_shapes = self.canvas.shapes
 
         self.canvas.loadPixmap(QtGui.QPixmap.fromImage(self.image))
-        
+
         self.loadLabels(self.labelFile.shapes)
 
         # if self.labelFile.flags is not None:
