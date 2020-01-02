@@ -1767,7 +1767,17 @@ class MainWindow(QtWidgets.QMainWindow):
         return lst
 
     def openDbImages(self, images, load=True):
-        set_trace()
+        self.filename = None
+        self.fileListWidget.clear()
+
+        for row in images:
+            _id = str(row['id'])
+
+            item = QtWidgets.QListWidgetItem(_id)
+            item.setFlags(Qt.ItemIsEnabled | Qt.ItemIsSelectable)
+
+            self.fileListWidget.addItem(item)
+
         pass
 
     def importDirImages(self, dirpath, pattern=None, load=True):
