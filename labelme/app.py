@@ -929,7 +929,7 @@ class MainWindow(QtWidgets.QMainWindow):
             load=False,
         )
 
-    def fileSelectionChanged(self):
+    def fileSelectionFromDbChanged(self):
         items = self.fileListWidget.selectedItems()
         if not items:
             return
@@ -942,7 +942,19 @@ class MainWindow(QtWidgets.QMainWindow):
         if currIndex < len(self.imageList):
             filename = self.imageList[currIndex]
             if filename:
-                self.loadFile(filename)
+                self.loadFileFromDb(filename)
+
+
+    def fileSelectionChanged(self):
+        items = self.fileListWidget.selectedItems()
+        if not items:
+            return
+        item = items[0]
+
+        if not self.mayContinue():
+            return
+
+        self.loadFileFromDb(int(item.text()))
 
     # React to canvas signals.
     def shapeSelectionChanged(self, selected_shapes):
