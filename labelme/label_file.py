@@ -110,6 +110,7 @@ class LabelFile(object):
                 imageData = base64.b64decode(data['imageData'])
                 if PY2 and QT4:
                     imageData = utils.img_data_to_png_data(imageData)
+                imagePath = data['imagePath']
             else:
 
                 # FIX: Relative paths
@@ -121,9 +122,6 @@ class LabelFile(object):
                 imageData = self.load_image_file(imagePath)
 
             flags = data.get('flags') or {}
-
-            # FIX: Remove?
-            # imagePath = data['imagePath']
 
             self._check_image_height_and_width(
                 base64.b64encode(imageData).decode('utf-8'),
