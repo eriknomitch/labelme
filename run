@@ -1,3 +1,6 @@
-pip install -e . && \
-  clear && \
+clear && \
   labelme
+
+#pip install -e . && \
+#  clear && \
+#  labelme
