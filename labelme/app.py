@@ -1491,7 +1491,7 @@ class MainWindow(QtWidgets.QMainWindow):
             return
 
         # TEMPORARY:
-        _id = 3
+        _id = 1
 
         self.loadFileFromDb(_id)
 

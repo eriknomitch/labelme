@@ -14,6 +14,7 @@ def convert_to_blob(filename):
 examples_path = "examples/semantic_segmentation/data_annotated"
 
 example_names = [
+  "2011_000099",
   "2011_000003",
   "2011_000006",
   "2011_000025"
@@ -57,5 +58,5 @@ CREATE TABLE labels (
 )
 """)
 
-insert_example_data(100)
+insert_example_data(10)
 
