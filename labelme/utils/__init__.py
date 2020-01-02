@@ -28,6 +28,6 @@ from .qt import distance
 from .qt import distancetoline
 from .qt import fmtShortcut
 
-from .db import get_db_path, open_db, query
+from .db import get_db_path, open_db, query, get_unreviewed
 
 from .general import path_leaf

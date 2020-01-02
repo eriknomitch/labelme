@@ -189,7 +189,7 @@ class MainWindow(QtWidgets.QMainWindow):
                        'Open image or label file')
         open_from_db = action('&Open from DB', self.openFileFromDb, shortcuts['open_from_db'], 'open',
                        'Open label and corresponding image from DB')
-        opendir = action('&Open Unreviewed', self.openDirDialog,
+        opendir = action('&Open Dir', self.openDirDialog,
                          shortcuts['open_dir'], 'open', u'Open Dir')
         open_unreviewed = action('&Open Unreviewed', self.openUnreviewed,
                          None, 'open', u'Open Unreviewed')
@@ -1737,7 +1737,9 @@ class MainWindow(QtWidgets.QMainWindow):
         if not self.mayContinue():
             return
 
-        set_trace()
+        image_rows = utils.get_unreviewed()
+
+        self.openDbImages(image_rows)
 
     def openDirDialog(self, _value=False, dirpath=None):
         if not self.mayContinue():
@@ -1763,6 +1765,10 @@ class MainWindow(QtWidgets.QMainWindow):
             item = self.fileListWidget.item(i)
             lst.append(item.text())
         return lst
+
+    def openDbImages(self, images, load=True):
+        set_trace()
+        pass
 
     def importDirImages(self, dirpath, pattern=None, load=True):
         self.actions.openNextImg.setEnabled(True)
