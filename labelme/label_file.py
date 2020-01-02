@@ -121,7 +121,10 @@ class LabelFile(object):
                 imageData = self.load_image_file(imagePath)
 
             flags = data.get('flags') or {}
-            imagePath = data['imagePath']
+
+            # FIX: Remove?
+            # imagePath = data['imagePath']
+
             self._check_image_height_and_width(
                 base64.b64encode(imageData).decode('utf-8'),
                 data.get('imageHeight'),
@@ -140,6 +143,7 @@ class LabelFile(object):
                 )
                 for s in data['shapes']
             )
+
         except Exception as e:
             print(e)
             set_trace()

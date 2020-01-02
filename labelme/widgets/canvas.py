@@ -6,6 +6,7 @@ from labelme import QT5
 from labelme.shape import Shape
 import labelme.utils
 
+from ipdb import set_trace
 
 # TODO(unknown):
 # - [maybe] Find optimal epsilon value.
@@ -688,6 +689,7 @@ class Canvas(QtWidgets.QWidget):
         self.repaint()
 
     def loadShapes(self, shapes, replace=True):
+        # set_trace()
         if replace:
             self.shapes = list(shapes)
         else:

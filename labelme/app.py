@@ -1226,7 +1226,7 @@ class MainWindow(QtWidgets.QMainWindow):
         for item, shape in self.labelList.itemsToShapes:
             item.setCheckState(Qt.Checked if value else Qt.Unchecked)
 
-    # TODO: DRY with loadFile
+    # TODO: FIX: DRY with loadFile - LOTS of duplicate code here...
     def loadFileFromDb(self, _id):
         self.resetState()
         self.canvas.setEnabled(False)
@@ -1247,11 +1247,25 @@ class MainWindow(QtWidgets.QMainWindow):
             self.fillColor = QtGui.QColor(*self.labelFile.fillColor)
         self.otherData = self.labelFile.otherData
 
-        self.loadLabels(self.labelFile.shapes)
-        if self.labelFile.flags is not None:
-            self.loadFlags(self.labelFile.flags)
+        # if self._config['keep_prev']:
+        #     prev_shapes = self.canvas.shapes
 
         self.canvas.loadPixmap(QtGui.QPixmap.fromImage(self.image))
+        
+        self.loadLabels(self.labelFile.shapes)
+
+        # if self.labelFile.flags is not None:
+        #     self.loadFlags(self.labelFile.flags)
+
+
+        # if self._config['flags']:
+        #     self.loadFlags({k: False for k in self._config['flags']})
+        # if self.labelFile:
+        #     self.loadLabels(self.labelFile.shapes)
+        #     if self.labelFile.flags is not None:
+        #         self.loadFlags(self.labelFile.flags)
+        # if self._config['keep_prev'] and not self.labelList.shapes:
+        #     self.loadShapes(prev_shapes, replace=False)
 
         self.setClean()
         self.canvas.setEnabled(True)
@@ -1285,7 +1299,6 @@ class MainWindow(QtWidgets.QMainWindow):
         # assumes same name, but json extension
         self.status("Loading %s..." % osp.basename(str(filename)))
 
-        # TODO: IMPORTANT: Switch here for DB loading...
         label_file = osp.splitext(filename)[0] + '.json'
         if self.output_dir:
             label_file_without_path = osp.basename(label_file)
@@ -1293,7 +1306,6 @@ class MainWindow(QtWidgets.QMainWindow):
         if QtCore.QFile.exists(label_file) and \
                 LabelFile.is_label_file(label_file):
             try:
-                # NOTE: Here is where the actual file load happens
                 self.labelFile = LabelFile(label_file)
             except LabelFileError as e:
                 self.errorMessage(
@@ -1479,7 +1491,7 @@ class MainWindow(QtWidgets.QMainWindow):
             return
 
         # TEMPORARY:
-        _id = 1
+        _id = 3
 
         self.loadFileFromDb(_id)
 
