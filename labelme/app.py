@@ -125,8 +125,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.fileSearch.setPlaceholderText('Search Filename')
         self.fileSearch.textChanged.connect(self.fileSearchChanged)
         self.fileListWidget = QtWidgets.QListWidget()
+        # FIX: TODO: This breaks the actual open dir functionality
         self.fileListWidget.itemSelectionChanged.connect(
-            self.fileSelectionChanged
+            self.fileSelectionFromDbChanged
         )
         fileListLayout = QtWidgets.QVBoxLayout()
         fileListLayout.setContentsMargins(0, 0, 0, 0)
@@ -938,12 +939,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if not self.mayContinue():
             return
 
-        currIndex = self.imageList.index(str(item.text()))
-        if currIndex < len(self.imageList):
-            filename = self.imageList[currIndex]
-            if filename:
-                self.loadFileFromDb(filename)
-
+        self.loadFileFromDb(int(item.text()))
 
     def fileSelectionChanged(self):
         items = self.fileListWidget.selectedItems()
@@ -954,7 +950,11 @@ class MainWindow(QtWidgets.QMainWindow):
         if not self.mayContinue():
             return
 
-        self.loadFileFromDb(int(item.text()))
+        currIndex = self.imageList.index(str(item.text()))
+        if currIndex < len(self.imageList):
+            filename = self.imageList[currIndex]
+            if filename:
+                self.loadFile(filename)
 
     # React to canvas signals.
     def shapeSelectionChanged(self, selected_shapes):
