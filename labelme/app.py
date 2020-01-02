@@ -1236,12 +1236,10 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.labelFile = lf
         self.imagePath = lf.imagePath
-
-        # FIX: Happening twice? once in label_file load()?
-        self.imageData = LabelFile.load_image_file(lf.imagePath)
+        self.imageData = lf.imageData
+        self.filename = lf.filename
 
         self.image = QtGui.QImage.fromData(self.imageData)
-        self.filename = lf.filename
 
         if self.labelFile.lineColor is not None:
             self.lineColor = QtGui.QColor(*self.labelFile.lineColor)
@@ -1261,7 +1259,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.paintCanvas()
         # self.addRecentFile(self.filename)
         self.toggleActions(True)
-        self.status("Loaded %s" % osp.basename(str(self.filename)))
+        self.status("Loaded %s from DB" % osp.basename(str(self.filename)))
 
         return True
 
