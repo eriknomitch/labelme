@@ -189,8 +189,10 @@ class MainWindow(QtWidgets.QMainWindow):
                        'Open image or label file')
         open_from_db = action('&Open from DB', self.openFileFromDb, shortcuts['open_from_db'], 'open',
                        'Open label and corresponding image from DB')
-        opendir = action('&Open Dir', self.openDirDialog,
+        opendir = action('&Open Unreviewed', self.openDirDialog,
                          shortcuts['open_dir'], 'open', u'Open Dir')
+        open_unreviewed = action('&Open Unreviewed', self.openUnreviewed,
+                         None, 'open', u'Open Unreviewed')
         openNextImg = action(
             '&Next Image',
             self.openNextImg,
@@ -450,7 +452,7 @@ class MainWindow(QtWidgets.QMainWindow):
             fitWindow=fitWindow, fitWidth=fitWidth,
             zoomActions=zoomActions,
             openNextImg=openNextImg, openPrevImg=openPrevImg,
-            fileMenuActions=(open_, open_from_db, opendir, save, saveAs, saveToDb, close, quit),
+            fileMenuActions=(open_, open_from_db, opendir, open_unreviewed, save, saveAs, saveToDb, close, quit),
             tool=(),
             # XXX: need to add some actions here to activate the shortcut
             editMenu=(
@@ -520,6 +522,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 openNextImg,
                 openPrevImg,
                 opendir,
+                open_unreviewed,
                 self.menus.recentFiles,
                 save,
                 saveAs,
@@ -575,6 +578,7 @@ class MainWindow(QtWidgets.QMainWindow):
             open_,
             open_from_db,
             opendir,
+            open_unreviewed,
             openNextImg,
             openPrevImg,
             save,
@@ -1729,6 +1733,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.canvas.endMove(copy=False)
         self.setDirty()
 
+    def openUnreviewed(self, _value=False):
+        if not self.mayContinue():
+            return
+
+        set_trace()
+
     def openDirDialog(self, _value=False, dirpath=None):
         if not self.mayContinue():
             return
@@ -1764,6 +1774,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.lastOpenDir = dirpath
         self.filename = None
         self.fileListWidget.clear()
+
         for filename in self.scanAllImages(dirpath):
             if pattern and pattern not in filename:
                 continue

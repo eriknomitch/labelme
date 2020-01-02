@@ -30,3 +30,5 @@ def query(sql, data=()):
 def dict_to_json_blob(dct):
     return json.dumps(dct, ensure_ascii=False, indent=2).encode('utf-8')
 
+def get_unreviewed():
+    return query("SELECT * FROM labels WHERE reviewed_at IS NULL ORDER BY created_at DESC")
