@@ -1246,7 +1246,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
     # TODO: FIX: DRY with loadFile - LOTS of duplicate code here...
     def loadFileFromDb(self, _id):
-        logger.info('Loading LabelFile from DB id={}'.format(_id))
 
         # Load from DB as if we were loading a .json
         label_file = LabelFile.load_from_db(_id)
@@ -1456,14 +1455,15 @@ class MainWindow(QtWidgets.QMainWindow):
         if len(self.imageList) <= 0:
             return
 
+        # FIX:? Check for self.labelFile...?
         if self.filename is None:
             return
 
-        currIndex = self.imageList.index(self.filename)
+        currIndex = self.imageList.index(str(self.labelFile.db_id))
         if currIndex - 1 >= 0:
-            filename = self.imageList[currIndex - 1]
-            if filename:
-                self.loadFile(filename)
+            _id = self.imageList[currIndex - 1]
+            if _id:
+                self.loadFile(_id)
 
         self._config['keep_prev'] = keep_prev
 
