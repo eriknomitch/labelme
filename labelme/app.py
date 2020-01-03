@@ -941,7 +941,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if not self.mayContinue():
             return
 
-        self.loadFileFromDb(int(item.text()))
+        self.loadFileFromDb(item.text())
 
     def fileSelectionChanged(self):
         items = self.fileListWidget.selectedItems()
@@ -1246,11 +1246,22 @@ class MainWindow(QtWidgets.QMainWindow):
 
     # TODO: FIX: DRY with loadFile - LOTS of duplicate code here...
     def loadFileFromDb(self, _id):
-        self.resetState()
-        self.canvas.setEnabled(False)
 
         # Load from DB as if we were loading a .json
         lf = LabelFile.load_from_db(_id)
+
+        logger.info('self.imageList: {}'.format(self.imageList))
+
+        # Changing fileListWidget loads file
+        if (_id in self.imageList and
+                self.fileListWidget.currentRow() !=
+                self.imageList.index(_id)):
+            self.fileListWidget.setCurrentRow(self.imageList.index(_id))
+            self.fileListWidget.repaint()
+            return
+
+        self.resetState()
+        self.canvas.setEnabled(False)
 
         self.labelFile = lf
         self.imagePath = lf.imagePath
