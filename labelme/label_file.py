@@ -38,6 +38,8 @@ class LabelFile(object):
     @staticmethod
     def load_from_db(_id):
 
+        logger.info('Loading LabelFile from DB id={}'.format(_id))
+
         _id = int(_id)
 
         # Fetch from DB

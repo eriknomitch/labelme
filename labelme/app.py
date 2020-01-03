@@ -1246,11 +1246,12 @@ class MainWindow(QtWidgets.QMainWindow):
 
     # TODO: FIX: DRY with loadFile - LOTS of duplicate code here...
     def loadFileFromDb(self, _id):
+        logger.info('Loading LabelFile from DB id={}'.format(_id))
 
         # Load from DB as if we were loading a .json
-        lf = LabelFile.load_from_db(_id)
+        label_file = LabelFile.load_from_db(_id)
 
-        logger.info('self.imageList: {}'.format(self.imageList))
+        logger.info('LabelFile: {}'.format(label_file))
 
         # Changing fileListWidget loads file
         if (_id in self.imageList and
@@ -1263,10 +1264,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.resetState()
         self.canvas.setEnabled(False)
 
-        self.labelFile = lf
-        self.imagePath = lf.imagePath
-        self.imageData = lf.imageData
-        self.filename = lf.filename
+        self.labelFile = label_file
+        self.imagePath = label_file.imagePath
+        self.imageData = label_file.imageData
+        self.filename = label_file.filename
 
         self.image = QtGui.QImage.fromData(self.imageData)
 
