@@ -455,7 +455,7 @@ class MainWindow(QtWidgets.QMainWindow):
             fitWindow=fitWindow, fitWidth=fitWidth,
             zoomActions=zoomActions,
             openNextImg=openNextImg, openPrevImg=openPrevImg,
-            fileMenuActions=(open_, open_from_db, opendir, open_unreviewed, save, saveAs, saveToDb, close, quit),
+            fileMenuActions=(open_from_db, open_unreviewed, save, saveAs, saveToDb, close, quit),
             tool=(),
             # XXX: need to add some actions here to activate the shortcut
             editMenu=(
@@ -580,7 +580,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.actions.tool = (
             open_,
             open_from_db,
-            opendir,
             open_unreviewed,
             openNextImg,
             openPrevImg,
@@ -1806,6 +1805,9 @@ class MainWindow(QtWidgets.QMainWindow):
         if self.fileListWidget.count() > 0:
             self.actions.openNextImg.setEnabled(True)
             self.actions.openPrevImg.setEnabled(True)
+
+        if load:
+            self.openFileFromDb(images[0]['id'])
 
         pass
 
