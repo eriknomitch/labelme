@@ -31,6 +31,8 @@ from labelme.widgets import ToolBar
 from labelme.widgets import ZoomWidget
 
 from ipdb import set_trace
+import traceback
+import logging
 
 # FIXME
 # - [medium] Set max zoom value to something big enough for FitWidth/Window
@@ -1263,9 +1265,6 @@ class MainWindow(QtWidgets.QMainWindow):
             self.fillColor = QtGui.QColor(*self.labelFile.fillColor)
         self.otherData = self.labelFile.otherData
 
-        # if self._config['keep_prev']:
-        #     prev_shapes = self.canvas.shapes
-
         self.canvas.loadPixmap(QtGui.QPixmap.fromImage(self.image))
 
         self.loadLabels(self.labelFile.shapes)
@@ -1457,10 +1456,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self._config['keep_prev'] = keep_prev
 
     def openNextImg(self, _value=False, load=True):
-        keep_prev = self._config['keep_prev']
-        if QtGui.QGuiApplication.keyboardModifiers() == \
-                (QtCore.Qt.ControlModifier | QtCore.Qt.ShiftModifier):
-            self._config['keep_prev'] = True
 
         if not self.mayContinue():
             return
@@ -1468,21 +1463,23 @@ class MainWindow(QtWidgets.QMainWindow):
         if len(self.imageList) <= 0:
             return
 
-        filename = None
-        if self.filename is None:
-            filename = self.imageList[0]
+        _id = None
+
+        # FIX: HACK:
+        if not hasattr(self, 'labelFile'):
+            self.labelFile = None
+
+        if self.labelFile is None:
+            _id = self.imageList[0]
         else:
-            currIndex = self.imageList.index(self.filename)
+            currIndex = self.imageList.index(str(self.labelFile.db_id))
             if currIndex + 1 < len(self.imageList):
-                filename = self.imageList[currIndex + 1]
+                _id = self.imageList[currIndex + 1]
             else:
-                filename = self.imageList[-1]
-        self.filename = filename
+                _id = self.imageList[-1]
 
-        if self.filename and load:
-            self.loadFile(self.filename)
-
-        self._config['keep_prev'] = keep_prev
+        if _id and load:
+            self.loadFileFromDb(_id)
 
     def openFile(self, _value=False):
         if not self.mayContinue():
@@ -1789,6 +1786,10 @@ class MainWindow(QtWidgets.QMainWindow):
             item.setFlags(Qt.ItemIsEnabled | Qt.ItemIsSelectable)
 
             self.fileListWidget.addItem(item)
+
+        if self.fileListWidget.count() > 0:
+            self.actions.openNextImg.setEnabled(True)
+            self.actions.openPrevImg.setEnabled(True)
 
         pass
 
