@@ -86,3 +86,8 @@ def distancetoline(point, line):
 def fmtShortcut(text):
     mod, key = text.split('+', 1)
     return '<b>%s</b>+<b>%s</b>' % (mod, key)
+
+def showMessageBox(text):
+    msg_box = QtWidgets.QMessageBox()
+    msg_box.setText(text)
+    msg_box.exec()

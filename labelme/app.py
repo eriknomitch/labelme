@@ -1791,6 +1791,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.filename = None
         self.fileListWidget.clear()
 
+        if len(images) == 0:
+            utils.showMessageBox("No unreviewed images exist in DB.")
+            return
+
         for row in images:
             _id = str(row['id'])
 
