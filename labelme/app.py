@@ -520,11 +520,8 @@ class MainWindow(QtWidgets.QMainWindow):
         utils.addActions(
             self.menus.file,
             (
-                open_,
-                open_from_db,
                 openNextImg,
                 openPrevImg,
-                opendir,
                 open_unreviewed,
                 self.menus.recentFiles,
                 save,
@@ -578,8 +575,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.tools = self.toolbar('Tools')
         # Menu buttons on Left
         self.actions.tool = (
-            open_,
-            open_from_db,
             open_unreviewed,
             openNextImg,
             openPrevImg,
