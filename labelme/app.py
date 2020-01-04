@@ -1558,7 +1558,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if self._config['flags'] or self.hasLabels():
             if self.labelFile:
                 # DL20180323 - overwrite when in directory
-                self._saveFile(self.labelFile.filename)
+                self._saveFile(self.labelFile.filename, True)
             elif self.output_file:
                 self._saveFile(self.output_file)
                 self.close()
